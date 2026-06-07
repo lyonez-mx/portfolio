@@ -58,12 +58,12 @@ export default function GitHub({ isDarkMode = true }: GitHubProps) {
           </svg>
           <div>
             <a
-              href="https://github.com/ericleonbs"
+              href="https://github.com/erickleonbs"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 rounded-lg px-2 py-0.5 text-lg font-bold transition-colors hover:bg-white/10"
             >
-              ericleonbs
+              erickleonbs
               <ExternalLink className="size-3.5" />
             </a>
             <p className={`text-sm ${muted}`}>Full-Stack Developer</p>
