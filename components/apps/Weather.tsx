@@ -149,10 +149,10 @@ export default function Weather({ isDarkMode = true }: WeatherProps) {
                   <h2 className="text-2xl font-bold">{data.nes}</h2>
                 </div>
                 <div className="mt-2 flex items-center gap-3">
-                  <span className="text-6xl font-light">{data.tmax}°</span>
+                  <span className="text-6xl font-light">{((Number(data.tmax) + Number(data.tmin)) / 2).toFixed(0)}°</span>
                   <div>
                     <p className="text-lg">{data.desciel}</p>
-                    <p className={`text-sm ${muted}`}>Mín: {data.tmin}°</p>
+                    <p className={`text-sm ${muted}`}>{t("maxMin").replace("{max}", data.tmax).replace("{min}", data.tmin)}</p>
                   </div>
                 </div>
               </div>
@@ -163,10 +163,8 @@ export default function Weather({ isDarkMode = true }: WeatherProps) {
               <div className="flex items-center gap-2">
                 <Thermometer className="size-4 text-orange-400" />
                 <div>
-                  <p className={`text-xs ${muted}`}>{t("feelsLike")}</p>
-                  <p className="font-medium">
-                    {((Number(data.tmax) + Number(data.tmin)) / 2).toFixed(1)}°
-                  </p>
+                  <p className={`text-xs ${muted}`}>{t("maxMinLabel")}</p>
+                  <p className="font-medium">{data.tmax}° / {data.tmin}°</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">

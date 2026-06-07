@@ -32,6 +32,8 @@ export const en = {
   fullscreen: "Fullscreen",
   display: "Display",
   volume: "Volume",
+  maxMin: "Max: {max}° / Min: {min}°",
+  maxMinLabel: "Max / Min",
   feelsLike: "Feels like",
   rain: "Rain",
   wind: "Wind",
@@ -42,4 +44,6 @@ export const en = {
   municipalities: "Municipalities",
   searchState: "Search state...",
   retry: "Retry",
+  view: "View",
+  edit: "Edit",
 } as const

@@ -19,10 +19,10 @@ export default function Safari({ isDarkMode = true }: SafariProps) {
   const hover = isDarkMode ? "hover:bg-gray-700" : "hover:bg-gray-200"
 
   const bookmarks = [
-    { title: "GitHub", url: "https://github.com", icon: <GithubIcon /> },
-    { title: "LinkedIn", url: "https://linkedin.com", icon: <LinkedinIcon /> },
+    { title: "GitHub", url: "https://github.com/lyonez-mx", icon: <GithubIcon /> },
+    { title: "LinkedIn", url: "https://www.linkedin.com/in/erick-hip%C3%B3lito-7b81b838a/", icon: <LinkedinIcon /> },
     { title: "YouTube", url: "https://youtube.com", icon: <YoutubeIcon /> },
-    { title: "Email", url: "mailto:erick.hipolito@lyonez.group", icon: <MailIcon /> },
+    { title: "Email", url: "mailto:[EMAIL_ADDRESS]", icon: <MailIcon /> },
   ]
 
   function handleRefresh() {

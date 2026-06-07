@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Pencil } from "lucide-react"
 import { useOSStore } from "@/hooks/useOSStore"
+import { useTranslation } from "@/contexts/i18n"
 
 interface NotesProps {
   isDarkMode?: boolean
@@ -213,12 +214,17 @@ function renderNote(content: string): string {
 }
 
 export default function Notes({ isDarkMode = true }: NotesProps) {
+  const { t } = useTranslation()
   const locale = useOSStore((s) => s.locale)
   const [notes, setNotes] = useState(defaultNotes)
-  const [selectedId, setSelectedId] = useState(1)
+  const [selectedId, setSelectedId] = useState(locale === "en" ? 1 : 2)
   const [editing, setEditing] = useState(false)
 
-  const selected = notes.find((n) => n.id === selectedId)
+  const localeNotes = notes.filter((n) => {
+    if (locale === "en") return [1, 3].includes(n.id)
+    return [2, 4].includes(n.id)
+  })
+  const selected = localeNotes.find((n) => n.id === selectedId) ?? localeNotes[0]
 
   // Auto-select note based on locale
   useEffect(() => {
@@ -233,8 +239,9 @@ export default function Notes({ isDarkMode = true }: NotesProps) {
   }, [locale, selectedId])
 
   function handleContentChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    if (!selected) return
     setNotes((prev) =>
-      prev.map((n) => (n.id === selectedId ? { ...n, content: e.target.value } : n)),
+      prev.map((n) => (n.id === selected.id ? { ...n, content: e.target.value } : n)),
     )
   }
 
@@ -251,10 +258,10 @@ export default function Notes({ isDarkMode = true }: NotesProps) {
       {/* Sidebar */}
       <div className={`w-56 shrink-0 border-r ${border} ${sidebar} flex flex-col`}>
         <div className={`border-b ${border} px-4 py-3`}>
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-white/50">Notes</h2>
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-white/50">{t("notes")}</h2>
         </div>
         <div className="flex-1 overflow-y-auto p-2">
-          {notes.map((note) => (
+          {localeNotes.map((note) => (
             <button
               key={note.id}
               onClick={() => { setSelectedId(note.id); setEditing(false) }}
@@ -278,7 +285,7 @@ export default function Notes({ isDarkMode = true }: NotesProps) {
               <button
                 onClick={() => setEditing(!editing)}
                 className={`rounded-lg p-1.5 transition-colors ${hover}`}
-                title={editing ? "View" : "Edit"}
+                title={editing ? t("view") : t("edit")}
               >
                 <Pencil className="size-4" />
               </button>

@@ -32,6 +32,8 @@ export const es = {
   fullscreen: "Pantalla Completa",
   display: "Pantalla",
   volume: "Volumen",
+  maxMin: "Máx: {max}° / Mín: {min}°",
+  maxMinLabel: "Máx / Mín",
   feelsLike: "Sensación",
   rain: "Lluvia",
   wind: "Viento",
@@ -42,4 +44,6 @@ export const es = {
   municipalities: "Municipios",
   searchState: "Buscar estado...",
   retry: "Reintentar",
+  view: "Vista",
+  edit: "Editar",
 } as const

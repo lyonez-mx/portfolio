@@ -118,7 +118,7 @@ export default function GitHub({ isDarkMode = true }: GitHubProps) {
                     <img src={p.icon} alt="" className="size-6 object-contain" draggable={false} />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h3 className={`truncate font-semibold ${text}`}>{p.title}</h3>
+                    <h3 className={`font-semibold ${text}`}>{p.title}</h3>
                     <div className={`mt-0.5 flex items-center gap-2 text-xs ${muted}`}>
                       {categoryIcons[p.category]}
                       <span className="capitalize">{p.category}</span>
@@ -127,8 +127,8 @@ export default function GitHub({ isDarkMode = true }: GitHubProps) {
                 </div>
 
                 {/* Description */}
-                <p className={`mb-3 line-clamp-3 text-xs leading-relaxed ${muted}`}>
-                  {p.description.split(".").slice(0, 3).join(".")}.
+                <p className={`mb-3 text-xs leading-relaxed ${muted}`}>
+                  {p.description}
                 </p>
 
                 {/* Tech badges */}
