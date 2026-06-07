@@ -52,33 +52,33 @@ export default function TopBar() {
           {showApple && (
             <div className="absolute left-0 top-7 w-52 rounded-lg border border-white/10 bg-neutral-800/90 py-1 shadow-2xl backdrop-blur-2xl">
               <button className="w-full px-4 py-1 text-left hover:bg-white/10" onClick={() => setShowApple(false)}>
-                About This Mac
+                {t("aboutThisMac")}
               </button>
               <div className="my-1 border-t border-white/10" />
               <button
                 className="w-full px-4 py-1 text-left hover:bg-white/10"
                 onClick={() => setSystemState("sleep")}
               >
-                Sleep
+                {t("sleep")}
               </button>
               <button
                 className="w-full px-4 py-1 text-left hover:bg-white/10"
                 onClick={() => setSystemState("boot")}
               >
-                Restart...
+                {t("restart")}
               </button>
               <button
                 className="w-full px-4 py-1 text-left hover:bg-white/10"
                 onClick={() => setSystemState("shutdown")}
               >
-                Shut Down...
+                {t("shutDown")}
               </button>
               <div className="my-1 border-t border-white/10" />
               <button
                 className="w-full px-4 py-1 text-left hover:bg-white/10"
                 onClick={() => setSystemState("login")}
               >
-                Log Out...
+                {t("logOut")}
               </button>
             </div>
           )}

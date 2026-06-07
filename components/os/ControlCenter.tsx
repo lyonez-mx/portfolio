@@ -6,7 +6,7 @@ import { useTranslation } from "@/contexts/i18n"
 import { useOSStore } from "@/hooks/useOSStore"
 
 export default function ControlCenter() {
-  const { locale, setLocale } = useTranslation()
+  const { t, locale, setLocale } = useTranslation()
   const isDarkMode = useOSStore((s) => s.isDarkMode)
   const toggleDarkMode = useOSStore((s) => s.toggleDarkMode)
   const brightness = useOSStore((s) => s.brightness)
@@ -32,35 +32,35 @@ export default function ControlCenter() {
             className="flex flex-col items-center gap-1 rounded-lg bg-white/5 p-2 hover:bg-white/10"
           >
             <Wifi className={`size-5 ${wifiOn ? "text-blue-400" : "text-white/30"}`} />
-            <span className="text-[10px]">Wi-Fi</span>
+            <span className="text-[10px]">{t("wifi")}</span>
           </button>
           <button
             onClick={() => setBluetoothOn(!bluetoothOn)}
             className="flex flex-col items-center gap-1 rounded-lg bg-white/5 p-2 hover:bg-white/10"
           >
             <Bluetooth className={`size-5 ${bluetoothOn ? "text-blue-400" : "text-white/30"}`} />
-            <span className="text-[10px]">BT</span>
+            <span className="text-[10px]">{t("bluetooth")}</span>
           </button>
           <button
             onClick={toggleDarkMode}
             className="flex flex-col items-center gap-1 rounded-lg bg-white/5 p-2 hover:bg-white/10"
           >
             {isDarkMode ? <Moon className="size-5 text-blue-400" /> : <Sun className="size-5 text-yellow-400" />}
-            <span className="text-[10px]">{isDarkMode ? "Dark" : "Light"}</span>
+            <span className="text-[10px]">{isDarkMode ? t("dark") : t("light")}</span>
           </button>
           <button
             onClick={toggleFullscreen}
             className="flex flex-col items-center gap-1 rounded-lg bg-white/5 p-2 hover:bg-white/10"
           >
             <Maximize className="size-5" />
-            <span className="text-[10px]">FS</span>
+            <span className="text-[10px]">{t("fullscreen")}</span>
           </button>
         </div>
 
         <div className="rounded-lg bg-white/5 px-3 py-2">
           <div className="mb-1 flex items-center gap-2">
             <Monitor className="size-4" />
-            <span>Display</span>
+            <span>{t("display")}</span>
             <span className="ml-auto text-white/40">{brightness}%</span>
           </div>
           <input
@@ -76,7 +76,7 @@ export default function ControlCenter() {
         <div className="rounded-lg bg-white/5 px-3 py-2">
           <div className="mb-1 flex items-center gap-2">
             <Volume2 className="size-4" />
-            <span>Volume</span>
+            <span>{t("volume")}</span>
             <span className="ml-auto text-white/40">{volume}%</span>
           </div>
           <input
@@ -90,7 +90,7 @@ export default function ControlCenter() {
         </div>
 
         <div className="flex items-center justify-between rounded-lg bg-white/5 px-3 py-2">
-          <span>Idioma</span>
+          <span>{t("language")}</span>
           <button
             onClick={() => setLocale(locale === "en" ? "es" : "en")}
             className="rounded border border-white/10 px-2 py-0.5 text-[10px] uppercase transition-colors hover:bg-white/10"

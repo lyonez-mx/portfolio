@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useCallback, useEffect } from "react"
+import { useState, useRef, useCallback } from "react"
 import { useOSStore, type AppId } from "@/hooks/useOSStore"
 
 interface WindowProps {
@@ -8,13 +8,18 @@ interface WindowProps {
   title: string
   children: React.ReactNode
   defaultSize?: { width: number; height: number }
+  defaultPosition?: { x: number; y: number }
 }
 
 type ResizeDir = "n" | "s" | "e" | "w" | "ne" | "nw" | "se" | "sw"
 
 const minSize = { width: 300, height: 200 }
 
-function randomPos(defaultSize: { width: number; height: number }) {
+function calcPos(
+  defaultSize: { width: number; height: number },
+  preferred?: { x: number; y: number },
+) {
+  if (preferred) return preferred
   const maxX = typeof window !== "undefined" ? window.innerWidth - defaultSize.width : 800
   const maxY = typeof window !== "undefined" ? window.innerHeight - defaultSize.height : 400
   return {
@@ -23,18 +28,33 @@ function randomPos(defaultSize: { width: number; height: number }) {
   }
 }
 
-export default function Window({ appId, title, children, defaultSize = { width: 600, height: 400 } }: WindowProps) {
+export default function Window({
+  appId, title, children,
+  defaultSize = { width: 600, height: 400 },
+  defaultPosition,
+}: WindowProps) {
   const { apps, focusApp, closeApp, toggleMinimize } = useOSStore()
   const app = apps.find((a) => a.id === appId)
   if (!app || !app.isOpen) return null
 
-  return <WindowInner appId={appId} title={title} defaultSize={defaultSize}>{children}</WindowInner>
+  return (
+    <WindowInner
+      appId={appId}
+      title={title}
+      defaultSize={defaultSize}
+      defaultPosition={defaultPosition}
+    >
+      {children}
+    </WindowInner>
+  )
 }
 
-function WindowInner({ appId, title, defaultSize, children }: WindowProps & { defaultSize: { width: number; height: number } }) {
+function WindowInner({
+  appId, title, defaultSize, defaultPosition, children,
+}: WindowProps & { defaultSize: { width: number; height: number } }) {
   const { apps, focusApp, closeApp, toggleMinimize, highestZ } = useOSStore()
   const app = apps.find((a) => a.id === appId)!
-  const [pos, setPos] = useState(() => randomPos(defaultSize))
+  const [pos, setPos] = useState(() => calcPos(defaultSize, defaultPosition))
   const [size, setSize] = useState(defaultSize)
   const [isMaximized, setIsMaximized] = useState(false)
   const [prevState, setPrevState] = useState<{ pos: { x: number; y: number }; size: { width: number; height: number } } | null>(null)
@@ -169,7 +189,6 @@ function WindowInner({ appId, title, defaultSize, children }: WindowProps & { de
 
       <div className="h-[calc(100%-36px)] bg-neutral-900">{children}</div>
 
-      {/* Resize handles */}
       <div className="absolute inset-0 pointer-events-none">
         <div onMouseDown={(e) => handleResizeStart(e, "n")} className="absolute top-0 left-2 right-2 h-1 cursor-n-resize pointer-events-auto" />
         <div onMouseDown={(e) => handleResizeStart(e, "s")} className="absolute bottom-0 left-2 right-2 h-1 cursor-s-resize pointer-events-auto" />

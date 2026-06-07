@@ -2,10 +2,11 @@
 
 import { useState, useRef, useCallback } from "react"
 import { useOSStore } from "@/hooks/useOSStore"
-import { FileText, Image } from "lucide-react"
-import type { DesktopFile } from "@/constants/desktop-files"
+import { FileText, Image, File } from "lucide-react"
+import { resolveFile, type DesktopFile } from "@/constants/desktop-files"
 
 export default function DesktopIcon({ file: initial }: { file: DesktopFile }) {
+  const locale = useOSStore((s) => s.locale)
   const openFile = useOSStore((s) => s.openFile)
   const [pos, setPos] = useState(initial.position)
   const dragRef = useRef<{
@@ -14,6 +15,8 @@ export default function DesktopIcon({ file: initial }: { file: DesktopFile }) {
     startPos: { x: number; y: number }
   } | null>(null)
   const clickTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const resolved = resolveFile(initial, locale)
 
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
@@ -46,19 +49,15 @@ export default function DesktopIcon({ file: initial }: { file: DesktopFile }) {
     [pos],
   )
 
-  function handleDoubleClick() {
-    if (clickTimeout.current) {
-      clearTimeout(clickTimeout.current)
-      clickTimeout.current = null
-    }
-    openFile(initial)
+  function handleOpen() {
+    openFile(resolved)
   }
 
   function handleClick() {
     if (clickTimeout.current) {
       clearTimeout(clickTimeout.current)
       clickTimeout.current = null
-      openFile(initial)
+      handleOpen()
       return
     }
     clickTimeout.current = setTimeout(() => {
@@ -77,12 +76,14 @@ export default function DesktopIcon({ file: initial }: { file: DesktopFile }) {
       <div className="flex size-12 items-center justify-center">
         {initial.type === "txt" ? (
           <FileText className="size-10 text-blue-300" strokeWidth={1.5} />
+        ) : initial.type === "pdf" ? (
+          <File className="size-10 text-red-400" strokeWidth={1.5} />
         ) : (
           <Image className="size-10 text-green-300" strokeWidth={1.5} />
         )}
       </div>
       <span className="max-w-full truncate text-center text-[11px] leading-tight drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-        {initial.name}
+        {resolved.name}
       </span>
     </button>
   )

@@ -22,7 +22,7 @@ export default function Safari({ isDarkMode = true }: SafariProps) {
     { title: "GitHub", url: "https://github.com", icon: <GithubIcon /> },
     { title: "LinkedIn", url: "https://linkedin.com", icon: <LinkedinIcon /> },
     { title: "YouTube", url: "https://youtube.com", icon: <YoutubeIcon /> },
-    { title: "Email", url: "mailto:hello@lyonos.dev", icon: <MailIcon /> },
+    { title: "Email", url: "mailto:erick.hipolito@lyonez.group", icon: <MailIcon /> },
   ]
 
   function handleRefresh() {

@@ -1,5 +1,5 @@
 import { create } from "zustand"
-import type { DesktopFile } from "@/constants/desktop-files"
+import type { ResolvedFile } from "@/constants/desktop-files"
 
 export type SystemState = "boot" | "login" | "desktop" | "sleep" | "shutdown"
 
@@ -19,6 +19,7 @@ export type AppId =
   | "settings"
   | "textedit"
   | "imageviewer"
+  | "pdfviewer"
 
 export interface AppState {
   id: AppId
@@ -36,7 +37,7 @@ interface OSStore {
   systemState: SystemState
   isDarkMode: boolean
   brightness: number
-  currentFile: DesktopFile | null
+  currentFile: ResolvedFile | null
   openApp: (id: AppId) => void
   closeApp: (id: AppId) => void
   toggleMinimize: (id: AppId) => void
@@ -45,21 +46,21 @@ interface OSStore {
   setSystemState: (state: SystemState) => void
   toggleDarkMode: () => void
   setBrightness: (value: number) => void
-  openFile: (file: DesktopFile) => void
+  openFile: (file: ResolvedFile) => void
   clearFile: () => void
 }
 
 const allApps: AppId[] = [
   "finder", "terminal", "spotlight", "notes", "safari",
   "music", "snake", "weather", "facetime", "github",
-  "mail", "youtube", "settings", "textedit", "imageviewer",
+  "mail", "youtube", "settings", "textedit", "imageviewer", "pdfviewer",
 ]
 
 const initialApps: AppState[] = allApps.map((id) => ({
   id,
-  isOpen: id === "finder",
+  isOpen: id === "finder" || id === "music",
   isMinimized: false,
-  zIndex: id === "finder" ? 1 : 0,
+  zIndex: id === "finder" ? 1 : id === "music" ? 2 : 0,
 }))
 
 export const useOSStore = create<OSStore>((set) => {
@@ -68,9 +69,9 @@ export const useOSStore = create<OSStore>((set) => {
 
   return {
     apps: initialApps,
-    highestZ: 1,
+    highestZ: 2,
     locale: "en",
-    systemState: "boot",
+    systemState: "desktop",
     isDarkMode: savedDark === null ? true : savedDark === "true",
     brightness: savedBright === null ? 90 : Number(savedBright),
     currentFile: null,
@@ -125,7 +126,10 @@ export const useOSStore = create<OSStore>((set) => {
 
     openFile: (file) =>
       set((state) => {
-        const appId: AppId = file.type === "txt" ? "textedit" : "imageviewer"
+        const appId: AppId =
+          file.type === "txt" ? "textedit" :
+          file.type === "pdf" ? "pdfviewer" :
+          "imageviewer"
         return {
           currentFile: file,
           highestZ: state.highestZ + 1,

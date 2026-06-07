@@ -1,6 +1,8 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
+import { resolve, getNode, ls, cat, formatLS } from "@/lib/virtual-fs"
+import { projects } from "@/constants/projects"
 
 interface TerminalProps {
   isDarkMode?: boolean
@@ -8,6 +10,7 @@ interface TerminalProps {
 
 export default function Terminal({ isDarkMode = true }: TerminalProps) {
   const [input, setInput] = useState("")
+  const [cwd, setCwd] = useState("~")
   const [history, setHistory] = useState<string[]>([
     "Last login: " + new Date().toLocaleString(),
     "Welcome to LyonOS Terminal",
@@ -27,45 +30,117 @@ export default function Terminal({ isDarkMode = true }: TerminalProps) {
     if (termRef.current) termRef.current.scrollTop = termRef.current.scrollHeight
   }, [history])
 
+  function add(...lines: string[]) {
+    setHistory((p) => [...p, ...lines, ""])
+  }
+
+  const absCwd = cwd === "~" ? "/home/erik" : cwd.startsWith("~/") ? "/home/erik" + cwd.slice(1) : cwd
+
   function run(cmd: string) {
-    const parts = cmd.trim().toLowerCase().split(/\s+/)
-    const main = parts[0]
+    const parts = cmd.trim().split(/\s+/)
+    const main = parts[0].toLowerCase()
 
-    setHistory((prev) => [...prev, `erik@lyonos ~ % ${cmd}`, ""])
-
-    const add = (...lines: string[]) => setHistory((p) => [...p, ...lines, ""])
+    setHistory((prev) => [
+      ...prev,
+      `erik@lyonos ${cwd} % ${cmd}`,
+      "",
+    ])
 
     switch (main) {
       case "help":
         add(
           "Available commands:",
-          "  help      Show this message",
-          "  clear     Clear terminal",
-          "  echo      Print text",
-          "  date      Show current date/time",
-          "  ls        List files",
-          "  whoami    Show current user",
-          "  about     About me",
-          "  skills    My technical skills",
-          "  projects  Featured projects",
-          "  contact   Contact info",
+          "  cd [dir]   Change directory (cd .., cd ~, cd projects)",
+          "  ls [-la]   List directory contents",
+          "  cat [file] Show file contents",
+          "  pwd        Print working directory",
+          "  clear      Clear terminal",
+          "  help       Show this message",
+          "  echo       Print text",
+          "  date       Show current date/time",
+          "  about      About me",
+          "  skills     My technical skills",
+          "  projects   List all projects",
+          "  whoami     Show current user",
         )
         break
+
       case "clear":
         setHistory([])
         break
+
+      case "pwd":
+        add(absCwd)
+        break
+
+      case "cd": {
+        const target = parts[1] || "~"
+        const resolved = resolve(absCwd, target)
+        const node = getNode(resolved)
+        if (!node) {
+          add(`cd: no such file or directory: ${target}`)
+        } else if (node.type !== "dir") {
+          add(`cd: not a directory: ${target}`)
+        } else {
+          const newCwd = resolved === "/home/erik" ? "~" : resolved.startsWith("/home/erik/") ? "~" + resolved.slice(10) : resolved
+          setCwd(newCwd)
+        }
+        break
+      }
+
+      case "ls": {
+        const flag = parts[1]
+        const target = flag?.startsWith("-") ? (parts[2] || ".") : (parts[1] || ".")
+        const path = resolve(absCwd, target)
+        const node = getNode(path)
+
+        if (!node) {
+          add(`ls: no such file or directory: ${target}`)
+        } else if (node.type !== "dir") {
+          add(`ls: not a directory: ${target}`)
+        } else {
+          if (flag === "-la") {
+            const out = formatLS(path)
+            add(out || "(empty)")
+          } else {
+            const listing = ls(path)
+            if (listing && listing.length > 0) {
+              add(listing.join("  "))
+            } else {
+              add("(empty)")
+            }
+          }
+        }
+        break
+      }
+
+      case "cat": {
+        if (!parts[1]) {
+          add("cat: missing filename")
+          break
+        }
+        const path = resolve(absCwd, parts[1])
+        const content = cat(path)
+        if (content === null) {
+          add(`cat: ${parts[1]}: No such file or directory`)
+        } else {
+          add(content)
+        }
+        break
+      }
+
       case "echo":
         add(parts.slice(1).join(" "))
         break
+
       case "date":
         add(new Date().toString())
         break
-      case "ls":
-        add("Documents  Projects  Downloads  Desktop  Music  Pictures")
-        break
+
       case "whoami":
         add("erik")
         break
+
       case "about":
         add(
           "┌─────────────────────────────┐",
@@ -75,8 +150,11 @@ export default function Terminal({ isDarkMode = true }: TerminalProps) {
           "",
           "Passionate about building beautiful,",
           "performant web experiences.",
+          "",
+          "Try 'cat ~/about.txt' for more info.",
         )
         break
+
       case "skills":
         add(
           "Frontend:",
@@ -90,24 +168,18 @@ export default function Terminal({ isDarkMode = true }: TerminalProps) {
           "  Git  Docker  CI/CD  Linux  Figma",
         )
         break
+
       case "projects":
-        add(
-          "Featured Projects:",
-          "",
-          "LyonOS Portfolio",
-          "  macOS-inspired web OS with window management,",
-          "  interactive terminal, and dark/light mode.",
-          "  Stack: Next.js 16 · TypeScript 6 · Zustand 5 · TW 4",
-          "",
-          "More projects coming soon...",
-        )
+        add(`Total projects: ${projects.length}\n`)
+        for (const p of projects) {
+          add(`  ${p.title}`)
+          add(`    ${p.description.split(".")[0]}.`)
+          add(`    Tech: ${p.tech.join(", ")}`)
+          add(`    ${p.githubUrl}`)
+          add("")
+        }
         break
-      case "contact":
-        add(
-          "Email:  erik@lyonos.dev",
-          "GitHub: github.com/erikleon",
-        )
-        break
+
       default:
         add(`zsh: command not found: ${main}`)
     }
@@ -147,7 +219,7 @@ export default function Terminal({ isDarkMode = true }: TerminalProps) {
         <div key={i} className="whitespace-pre-wrap">{line}</div>
       ))}
       <div className="flex">
-        <span className="mr-2 shrink-0">erik@lyonos ~ %</span>
+        <span className="mr-2 shrink-0 text-green-300">erik@lyonos {cwd} %</span>
         <input
           ref={inputRef}
           type="text"

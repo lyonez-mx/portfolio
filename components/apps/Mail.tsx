@@ -9,7 +9,7 @@ interface MailProps {
 
 export default function MailApp({ isDarkMode = true }: MailProps) {
   useEffect(() => {
-    window.location.href = "mailto:hello@lyonos.dev"
+    window.location.href = "mailto:erick.hipolito@lyonez.group"
   }, [])
 
   return (

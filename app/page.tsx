@@ -1,10 +1,8 @@
 "use client"
 
-import { useEffect, useCallback } from "react"
+import { useEffect } from "react"
 import { useOSStore } from "@/hooks/useOSStore"
 import Desktop from "@/components/os/Desktop"
-import BootScreen from "@/components/os/BootScreen"
-import LoginScreen from "@/components/os/LoginScreen"
 import SleepScreen from "@/components/os/SleepScreen"
 import ShutdownScreen from "@/components/os/ShutdownScreen"
 
@@ -18,10 +16,6 @@ export default function Home() {
   }, [isDarkMode])
 
   useEffect(() => {
-    if (systemState === "boot") {
-      const t = setTimeout(() => setSystemState("login"), 3000)
-      return () => clearTimeout(t)
-    }
     if (systemState === "sleep") {
       const handleWake = () => setSystemState("login")
       window.addEventListener("click", handleWake, { once: true })
@@ -33,12 +27,8 @@ export default function Home() {
     }
   }, [systemState, setSystemState])
 
-  const handleLogin = useCallback(() => setSystemState("desktop"), [setSystemState])
-
   return (
     <>
-      {systemState === "boot" && <BootScreen />}
-      {systemState === "login" && <LoginScreen onLogin={handleLogin} />}
       {systemState === "desktop" && <Desktop />}
       {systemState === "sleep" && <SleepScreen />}
       {systemState === "shutdown" && <ShutdownScreen />}

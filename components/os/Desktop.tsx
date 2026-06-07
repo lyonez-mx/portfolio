@@ -34,7 +34,7 @@ export default function Desktop() {
           if (!entry) return null
           const Component = entry.component
           return (
-            <Window key={app.id} appId={app.id} title={entry.title} defaultSize={entry.defaultSize}>
+            <Window key={app.id} appId={app.id} title={entry.title} defaultSize={entry.defaultSize} defaultPosition={entry.defaultPosition}>
               <Component isDarkMode={isDarkMode} />
             </Window>
           )

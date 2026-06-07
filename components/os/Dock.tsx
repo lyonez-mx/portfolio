@@ -3,7 +3,7 @@
 import { useRef } from "react"
 import { motion, useMotionValue, useTransform } from "framer-motion"
 import { useOSStore, type AppId } from "@/hooks/useOSStore"
-import { FolderOpen, Search, Settings } from "lucide-react"
+
 
 interface DockItem {
   id: AppId | "launchpad"
@@ -17,19 +17,18 @@ const maxMagnify = 80
 
 const items: DockItem[] = [
   { id: "launchpad", label: "Launchpad", iconPath: "/icons/launchpad.png", icon: null! },
-  { id: "finder",    label: "Finder",    icon: <FolderOpen className="size-7" /> },
+  { id: "finder",    label: "Finder",    iconPath: "/icons/folder.png", icon: null! },
   { id: "safari",    label: "Safari",    iconPath: "/icons/safari.png", icon: null! },
   { id: "notes",     label: "Notes",     iconPath: "/icons/notes.png", icon: null! },
   { id: "terminal",  label: "Terminal",  iconPath: "/icons/terminal.png", icon: null! },
   { id: "music",     label: "Music",     iconPath: "/icons/spotify.png", icon: null! },
   { id: "snake",     label: "Snake",     iconPath: "/icons/snake.png", icon: null! },
   { id: "weather",   label: "Weather",   iconPath: "/icons/weather.png", icon: null! },
-  { id: "facetime",  label: "FaceTime",  iconPath: "/icons/facetime.png", icon: null! },
-  { id: "spotlight", label: "Spotlight", icon: <Search className="size-7" /> },
+  { id: "facetime",  label: "FaceTime",  iconPath: "/icons/phone.png", icon: null! },
   { id: "github",    label: "GitHub",    iconPath: "/icons/github.png", icon: null! },
   { id: "mail",      label: "Mail",      iconPath: "/icons/mail.png", icon: null! },
   { id: "youtube",   label: "YouTube",   iconPath: "/icons/youtube.png", icon: null! },
-  { id: "settings",  label: "Settings",  icon: <Settings className="size-7" /> },
+  { id: "settings",  label: "Settings",  iconPath: "/icons/settings.png", icon: null! },
 ]
 
 interface DockProps {

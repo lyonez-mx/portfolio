@@ -5,6 +5,7 @@ import "./globals.css"
 export const metadata: Metadata = {
   title: "LyonOS",
   description: "Portfolio Web OS",
+  icons: { icon: "/images/lyon.png" },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

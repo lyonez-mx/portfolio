@@ -2,7 +2,7 @@
 
 import { useOSStore, type AppId } from "@/hooks/useOSStore"
 import { appRegistry } from "@/lib/registry"
-import { FolderOpen, Search, Settings } from "lucide-react"
+import { FileText, Image, File } from "lucide-react"
 
 interface AppIcon {
   id: AppId
@@ -11,19 +11,21 @@ interface AppIcon {
 }
 
 const appIcons: AppIcon[] = [
-  { id: "finder",    lucideIcon: <FolderOpen className="size-8" /> },
-  { id: "safari",    iconPath: "/icons/safari.png" },
-  { id: "notes",     iconPath: "/icons/notes.png" },
-  { id: "terminal",  iconPath: "/icons/terminal.png" },
-  { id: "music",     iconPath: "/icons/spotify.png" },
-  { id: "snake",     iconPath: "/icons/snake.png" },
-  { id: "weather",   iconPath: "/icons/weather.png" },
-  { id: "facetime",  iconPath: "/icons/facetime.png" },
-  { id: "spotlight", lucideIcon: <Search className="size-8" /> },
-  { id: "github",    iconPath: "/icons/github.png" },
-  { id: "mail",      iconPath: "/icons/mail.png" },
-  { id: "youtube",   iconPath: "/icons/youtube.png" },
-  { id: "settings",  lucideIcon: <Settings className="size-8" /> },
+  { id: "finder",      iconPath: "/icons/folder.png" },
+  { id: "safari",      iconPath: "/icons/safari.png" },
+  { id: "notes",       iconPath: "/icons/notes.png" },
+  { id: "terminal",    iconPath: "/icons/terminal.png" },
+  { id: "music",       iconPath: "/icons/spotify.png" },
+  { id: "snake",       iconPath: "/icons/snake.png" },
+  { id: "weather",     iconPath: "/icons/weather.png" },
+  { id: "facetime",    iconPath: "/icons/phone.png" },
+  { id: "github",      iconPath: "/icons/github.png" },
+  { id: "mail",        iconPath: "/icons/mail.png" },
+  { id: "youtube",     iconPath: "/icons/youtube.png" },
+  { id: "settings",    iconPath: "/icons/settings.png" },
+  { id: "textedit",    lucideIcon: <FileText className="size-8" /> },
+  { id: "imageviewer", lucideIcon: <Image className="size-8" /> },
+  { id: "pdfviewer",   lucideIcon: <File className="size-8" /> },
 ]
 
 export default function Launchpad({ onClose }: { onClose: () => void }) {
@@ -36,7 +38,7 @@ export default function Launchpad({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-2xl"
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-2xl"
       onClick={onClose}
     >
       <div
