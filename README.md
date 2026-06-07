@@ -49,7 +49,7 @@ A macOS-inspired web-based operating system portfolio built with **Next.js 16**,
 ### Installation
 
 ```bash
-git clone https://github.com/erickleonbs/portfolio.git
+git clone https://github.com/lyonez-mx/portfolio.git
 cd portfolio
 npm install
 npm run dev
